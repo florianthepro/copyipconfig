@@ -25,7 +25,7 @@ set /p rPREFIX=
 set /p rGATEWAY=
 set /p rDNS=
 )
-powershell -NoProfile -ExecutionPolicy Bypass -Command "$a=Get-NetAdapter | ? {$_.MacAddress -eq '%rMAC%'}; if(@($a).Count -ne 1){exit}; $n=$a.Name; Set-NetIPInterface -InterfaceAlias $n -AddressFamily IPv4 -Dhcp Disabled; Remove-NetIPAddress -InterfaceAlias $n -AddressFamily IPv4 -Confirm:$false -ErrorAction SilentlyContinue; New-NetIPAddress -InterfaceAlias $n -IPAddress '%rIP%' -PrefixLength %rPREFIX% -DefaultGateway '%rGATEWAY%'; Set-DnsClientServerAddress -InterfaceAlias $n -ServerAddresses ('%rDNS%' -split ';')"
+powershell -NoProfile -ExecutionPolicy Bypass -Command "$c=@(Get-NetIPConfiguration | ? {$_.IPv4Address -and $_.IPv4DefaultGateway -and $_.NetAdapter.Status -eq 'Up'}); if($c.Count -ne 1){exit}; $n=$c[0].InterfaceAlias; Set-NetIPInterface -InterfaceAlias $n -AddressFamily IPv4 -Dhcp Disabled; Remove-NetIPAddress -InterfaceAlias $n -AddressFamily IPv4 -Confirm:$false -ErrorAction SilentlyContinue; New-NetIPAddress -InterfaceAlias $n -IPAddress '%rIP%' -PrefixLength %rPREFIX% -DefaultGateway '%rGATEWAY%'; Set-DnsClientServerAddress -InterfaceAlias $n -ServerAddresses ('%rDNS%' -split ';')"
 
 :end
 pause
