@@ -14,7 +14,7 @@ echo %IP% >> "copyipconfig.txt"
 echo %PREFIX% >> "copyipconfig.txt"
 echo %GATEWAY% >> "copyipconfig.txt"
 echo %DNS% >> "copyipconfig.txt"
-::goto end
+:goto end
 
 :restore
 < copyipconfig.txt (
@@ -25,15 +25,7 @@ set /p rPREFIX=
 set /p rGATEWAY=
 set /p rDNS=
 )
-echo %rIFACE% >> "copyipconfig.txt"
-echo %rMAC% >> "copyipconfig.txt"
-echo %rIP% >> "copyipconfig.txt"
-echo %rPREFIX% >> "copyipconfig.txt"
-echo %rGATEWAY% >> "copyipconfig.txt"
-echo %rDNS% >> "copyipconfig.txt"
 powershell -NoProfile -ExecutionPolicy Bypass -Command "$a=Get-NetAdapter | ? {$_.MacAddress -eq '%rMAC%'}; if(@($a).Count -ne 1){exit}; $n=$a.Name; Set-NetIPInterface -InterfaceAlias $n -AddressFamily IPv4 -Dhcp Disabled; Remove-NetIPAddress -InterfaceAlias $n -AddressFamily IPv4 -Confirm:$false -ErrorAction SilentlyContinue; New-NetIPAddress -InterfaceAlias $n -IPAddress '%rIP%' -PrefixLength %rPREFIX% -DefaultGateway '%rGATEWAY%'; Set-DnsClientServerAddress -InterfaceAlias $n -ServerAddresses ('%rDNS%' -split ';')"
-echo %IP%
-echo %rIP%
 
 :end
 pause
