@@ -14,7 +14,7 @@ echo %IP% >> "copyipconfig.txt"
 echo %PREFIX% >> "copyipconfig.txt"
 echo %GATEWAY% >> "copyipconfig.txt"
 echo %DNS% >> "copyipconfig.txt"
-:goto end
+goto end
 
 :restore
 < copyipconfig.txt (
